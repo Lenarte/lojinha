@@ -1,4 +1,4 @@
-package br.escdodev.lojinha.ui
+package com.escdodev.lojinha.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -26,7 +26,7 @@ fun ItensNavHost(
             IncluirEditarItemScreen(viewModel = viewModel, navController = navController)
         }
         composable("editarItem/{itemId}") { navRequest ->
-            val itemId = navRequest.arguments?.getString("afazerId")
+            val itemId = navRequest.arguments?.getString("itemId")
             IncluirEditarItemScreen(itemId?.toInt(), viewModel, navController)
         }
     }

@@ -91,7 +91,7 @@ fun ListarItensScreen(
         }
 
         Button(onClick = {
-            navController.navigate("incluir itens a venda")
+            navController.navigate("incluirItens")
         }) {
             Text(text = "Novo item a venda")
         }

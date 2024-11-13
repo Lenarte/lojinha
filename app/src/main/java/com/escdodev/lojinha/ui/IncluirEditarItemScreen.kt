@@ -38,7 +38,7 @@ fun IncluirEditarItemScreen(
 
     var item: Item? by remember { mutableStateOf(null) }
 
-    var label = if (itemId == null) "Novo Item a venda" else "Editar Item"
+    var label = if (itemId == null) "Novo Item" else "Editar Item"
 
     LaunchedEffect(itemId) {
         coroutineScope.launch {

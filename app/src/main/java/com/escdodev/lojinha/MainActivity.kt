@@ -1,14 +1,14 @@
-package br.escdodev.lojinha
+package com.escdodev.lojinha
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import br.escdodev.lojinha.ui.ItensNavHost
 import com.escdodev.lojinha.dados.ItemDatabase.Companion.abrirBancoDeDados
 import com.escdodev.lojinha.dados.LocalRepository
 import com.escdodev.lojinha.dados.RemoteRepository
 import com.escdodev.lojinha.ui.ItemViewModel
+import com.escdodev.lojinha.ui.ItensNavHost
 
 
 class MainActivity : ComponentActivity() {
