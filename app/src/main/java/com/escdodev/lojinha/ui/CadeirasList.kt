@@ -71,7 +71,7 @@ fun CadeirasList(navController: NavController) {
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
-                            IconButton(onClick = { /* Ação do Perfil */ }) {
+                            IconButton(onClick = { navController.navigate("login") }) {
                                 Icon(
                                     imageVector = Icons.Default.Face,
                                     contentDescription = "Perfil",
