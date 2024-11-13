@@ -17,8 +17,14 @@ fun ItensNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = "listarItens")
-    {
+        startDestination = "login" // Inicia na tela de login
+    ) {
+        composable("login") {
+            LoginScreen(navController)
+        }
+        composable("registro") {
+            RegistroScreen(navController)
+        }
         composable("listarItens") {
             ListarItensScreen(viewModel, navController)
         }
@@ -31,5 +37,3 @@ fun ItensNavHost(
         }
     }
 }
-
-
