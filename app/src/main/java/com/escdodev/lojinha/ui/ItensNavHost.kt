@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.escdodev.lojinha.ui.IncluirEditarItemScreen
 import com.escdodev.lojinha.ui.ItemViewModel
 import com.escdodev.lojinha.ui.ListarItensScreen
+import com.example.minhalojinha.view.CadeirasList
 
 @Composable
 fun ItensNavHost(
@@ -17,7 +18,7 @@ fun ItensNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = "login" // Inicia na tela de login
+        startDestination = "cadeiras" // Inicia na tela de login
     ) {
         composable("login") {
             LoginScreen(navController)
@@ -34,6 +35,9 @@ fun ItensNavHost(
         composable("editarItem/{itemId}") { navRequest ->
             val itemId = navRequest.arguments?.getString("itemId")
             IncluirEditarItemScreen(itemId?.toInt(), viewModel, navController)
+        }
+        composable("cadeiras") {
+            CadeirasList(navController)
         }
     }
 }

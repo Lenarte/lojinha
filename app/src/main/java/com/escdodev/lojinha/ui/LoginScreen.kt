@@ -46,7 +46,7 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { navController.navigate("listarItens") },
+            onClick = { navController.navigate("cadeiras") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
@@ -61,7 +61,7 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Botão para entrar sem fazer login
-        TextButton(onClick = { navController.navigate("listarItens") }) {
+        TextButton(onClick = { navController.navigate("cadeiras") }) {
             Text("Entrar sem fazer login")
         }
     }

@@ -85,7 +85,7 @@ fun RegistroScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { navController.navigate("listarItens") },
+            onClick = { navController.navigate("cadeiras") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Registrar")
