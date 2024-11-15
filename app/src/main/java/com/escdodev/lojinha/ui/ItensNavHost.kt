@@ -1,11 +1,11 @@
 package com.escdodev.lojinha.ui
 
+import CadeirasList
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-import com.example.minhalojinha.view.CadeirasList
 
 @Composable
 fun ItensNavHost(
@@ -37,5 +37,12 @@ fun ItensNavHost(
         composable("cadeiras") {
             CadeirasList(navController)
         }
+        composable("sofaList") {
+            SofaList(viewModel, navController)
+        }
+        composable("mesaList") {
+            MesaList(viewModel, navController)
+        }
+
     }
 }
