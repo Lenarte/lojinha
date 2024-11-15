@@ -1,5 +1,6 @@
 package com.escdodev.lojinha
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,8 +33,9 @@ class MainActivity : ComponentActivity() {
             viewModel = ItemViewModel(remoteRepository)
         }
 
+
         setContent {
-            ItensNavHost(viewModel)
+            ItensNavHost(viewModel = viewModel)
         }
     }
 }

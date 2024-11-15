@@ -87,4 +87,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")
 
+    //coil
+    implementation("io.coil-kt:coil-compose:2.2.2")  // Verifique se a versão está atualizada
+
+    // firebase para login
+    implementation ("com.google.firebase:firebase-auth-ktx")
+
 }

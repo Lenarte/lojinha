@@ -9,41 +9,32 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
+
 class RemoteRepository() : IRepository {
 
     var db = FirebaseFirestore.getInstance()
     var itemCollection = db.collection("itens")
 
-    //FUNÇÃO NÃO REATIVA OU SEJA NÃO ATUALIZA
-//    override fun listarAfazeres(): Flow<List<Afazer>> = flow {
-//        val dados = afazerCollection.get().await()
-//        val afazeres = dados.documents.mapNotNull { dado ->
-//            dado.toObject(Afazer::class.java)
-//        }
-//        emit(afazeres)
-//    }
-
-    //FUNÇÃO REATIVA
+    // Função reativa
     override fun listarItens(): Flow<List<Item>> = callbackFlow {
-        val listener = itemCollection.addSnapshotListener {
-                dados, erros ->
-            if (erros != null){
+        val listener = itemCollection.addSnapshotListener { dados, erros ->
+            if (erros != null) {
                 close(erros)
                 return@addSnapshotListener
             }
-            if (dados != null){
+            if (dados != null) {
                 val itens = dados.documents.mapNotNull { dado ->
                     dado.toObject(Item::class.java)
                 }
                 trySend(itens).isSuccess
             }
         }
-        awaitClose{ listener.remove()}
+        awaitClose { listener.remove() }
     }
 
-    suspend fun getId(): Int{
+    suspend fun getId(): Int {
         val dados = itemCollection.get().await()
-        //Recupera o maior id do firestore no format inteiro
+        // Recupera o maior id do Firestore no formato inteiro
         val maxId = dados.documents.mapNotNull {
             it.getLong("id")?.toInt()
         }.maxOrNull() ?: 0
@@ -52,19 +43,17 @@ class RemoteRepository() : IRepository {
 
     override suspend fun gravarItem(item: Item) {
         val document: DocumentReference
-        if (item.id == null){ // Inclusão
+        if (item.id == null) { // Inclusão
             item.id = getId()
             document = itemCollection.document(item.id.toString())
         } else { // Alteração
             document = itemCollection.document(item.id.toString())
         }
-        document.set(item).await()
+        document.set(item).await()  // Agora o item inclui imagemUri
     }
 
     override suspend fun buscarItemPorId(idx: Int): Item? {
         val dados = itemCollection.document(idx.toString()).get().await()
-//        val item = dados.toObject(Item::class.java)
-//        return item
         return dados.toObject(Item::class.java)
     }
 
@@ -72,3 +61,4 @@ class RemoteRepository() : IRepository {
         itemCollection.document(item.id.toString()).delete().await()
     }
 }
+

@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.escdodev.lojinha.ui.IncluirEditarItemScreen
-import com.escdodev.lojinha.ui.ItemViewModel
-import com.escdodev.lojinha.ui.ListarItensScreen
+
 import com.example.minhalojinha.view.CadeirasList
 
 @Composable
