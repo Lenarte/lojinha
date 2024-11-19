@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,13 +35,14 @@ import com.escdodev.lojinha.dados.Item
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncluirEditarItemScreen(
     itemId: Int? = null,
     viewModel: ItemViewModel,
     navController: NavController
 ) {
-    var coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     // Dados do item
     var titulo by remember { mutableStateOf("") }
@@ -48,7 +54,7 @@ fun IncluirEditarItemScreen(
 
     val label = if (itemId == null) "Novo Item" else "Editar Item"
 
-    // Launcher fora da função do botão, para não recriar a cada recomposição
+    // Launcher para selecionar imagem
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -69,79 +75,105 @@ fun IncluirEditarItemScreen(
         }
     }
 
-    Column(
-        modifier = Modifier.padding(30.dp)
-    ) {
-        Text(
-            text = label,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.ExtraBold
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(
-            value = titulo,
-            onValueChange = { titulo = it },
-            label = { Text("Título") }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(
-            value = descricao,
-            onValueChange = { descricao = it },
-            label = { Text("Descrição") }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(
-            value = preco,
-            onValueChange = { preco = it },
-            label = { Text("Preço") }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Botão para selecionar imagem com cor cinza
-        Button(
-            onClick = {
-                launcher.launch("image/*")  // Chama o launcher fora do escopo do Button
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray) // Cor do botão cinza
-        ) {
-            Text(text = "Selecionar Imagem")
-        }
-
-        // Exibir a imagem selecionada, se existir
-        imagemUri?.let {
-            Spacer(modifier = Modifier.height(10.dp))
-            Image(
-                painter = rememberAsyncImagePainter(it),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Botão de salvar com cor cinza
-        Button(
-            onClick = {
-                coroutineScope.launch {
-                    val itemSalvar = Item(
-                        id = itemId,
-                        titulo = titulo,
-                        descricao = descricao,
-                        preco = preco.toDouble(),
-                        imagemUri = imagemUri // Salvando a URI da imagem
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = label,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
-                    viewModel.gravar(itemSalvar)
-                    navController.popBackStack()
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Gray
+                )
+            )
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = titulo,
+                    onValueChange = { titulo = it },
+                    label = { Text("Título") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = descricao,
+                    onValueChange = { descricao = it },
+                    label = { Text("Descrição") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = preco,
+                    onValueChange = { preco = it },
+                    label = { Text("Preço") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                Button(
+                    onClick = {
+                        launcher.launch("image/*")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                ) {
+                    Text(text = "Selecionar Imagem", color = Color.White)
                 }
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray) // Cor do botão cinza
-        ) {
-            Text(text = "Salvar", fontSize = 30.sp)
+
+                // Exibir a imagem selecionada
+                imagemUri?.let {
+                    Image(
+                        painter = rememberAsyncImagePainter(it),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(bottom = 16.dp)
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            val itemSalvar = Item(
+                                id = itemId,
+                                titulo = titulo,
+                                descricao = descricao,
+                                preco = preco.toDouble(),
+                                imagemUri = imagemUri
+                            )
+                            viewModel.gravar(itemSalvar)
+                            navController.popBackStack()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                ) {
+                    Text(text = "Salvar", fontSize = 18.sp, color = Color.White)
+                }
+            }
         }
-    }
+    )
 }
+
+
 
 
 

@@ -35,7 +35,7 @@ fun ItensNavHost(
             IncluirEditarItemScreen(itemId?.toInt(), viewModel, navController)
         }
         composable("cadeiras") {
-            CadeirasList(navController)
+            CadeirasList(viewModel, navController)
         }
         composable("sofaList") {
             SofaList(viewModel, navController)

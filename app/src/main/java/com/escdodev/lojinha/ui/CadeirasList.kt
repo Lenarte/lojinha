@@ -1,6 +1,10 @@
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -13,15 +17,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberAsyncImagePainter
+import com.escdodev.lojinha.ui.ItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CadeirasList(navController: NavController) {
+fun CadeirasList(viewModel: ItemViewModel, navController: NavHostController) {
     var bottomState by remember { mutableStateOf("cadeira") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val itens by viewModel.itens.collectAsState()
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -93,20 +102,45 @@ fun CadeirasList(navController: NavController) {
                     }
                 }
             ) { innerPadding ->
-                // Removido o conteúdo que exibia as cadeiras
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.padding(innerPadding)
                 ) {
-                    // Exemplo de conteúdo alternativo
-                    Text(
-                        text = "Conteúdo removido! Não há itens para mostrar.",
-                        fontSize = 18.sp,
-                        color = Color.Gray
-                    )
+                    items(itens) { item ->
+                        Card(
+                            modifier = Modifier.padding(8.dp),
+                            shape = MaterialTheme.shapes.medium,
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                item.imagemUri?.let { uri ->
+                                    Image(
+                                        painter = rememberAsyncImagePainter(uri),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(150.dp)
+                                    )
+                                }
+
+                                Text(
+                                    text = item.titulo,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                                Text(
+                                    text = "R$ ${item.preco}",
+                                    color = Color.Gray,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
