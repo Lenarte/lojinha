@@ -32,14 +32,22 @@ class RemoteRepository() : IRepository {
         awaitClose { listener.remove() }
     }
 
+    //novo
     suspend fun getId(): Int {
-        val dados = itemCollection.get().await()
-        // Recupera o maior id do Firestore no formato inteiro
-        val maxId = dados.documents.mapNotNull {
-            it.getLong("id")?.toInt()
-        }.maxOrNull() ?: 0
+        val snapshot = itemCollection.get().await()
+        val maxId = snapshot.documents.mapNotNull { it.getLong("id")?.toInt() }.maxOrNull() ?: 0
         return maxId + 1
     }
+
+
+//    suspend fun getId(): Int {
+//        val dados = itemCollection.get().await()
+//        // Recupera o maior id do Firestore no formato inteiro
+//        val maxId = dados.documents.mapNotNull {
+//            it.getLong("id")?.toInt()
+//        }.maxOrNull() ?: 0
+//        return maxId + 1
+//    }
 
     override suspend fun gravarItem(item: Item) {
         val document: DocumentReference
@@ -60,5 +68,11 @@ class RemoteRepository() : IRepository {
     override suspend fun excluiritem(item: Item) {
         itemCollection.document(item.id.toString()).delete().await()
     }
+
+    suspend fun listarItensDiretamente(): List<Item> {
+        val snapshot = itemCollection.get().await()
+        return snapshot.documents.mapNotNull { it.toObject(Item::class.java) }
+    }
+
 }
 

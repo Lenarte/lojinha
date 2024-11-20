@@ -23,5 +23,8 @@ class LocalRepository(
     override suspend fun excluiritem(item: Item) {
         dao.excluirItem(item)
     }
+    // Recuperar lista completa do Room
+    suspend fun listarItensDiretamente(): List<Item> = dao.listaritensDiretamente()
+
 
 }

@@ -34,7 +34,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.escdodev.lojinha.dados.Item
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncluirEditarItemScreen(
@@ -49,8 +48,7 @@ fun IncluirEditarItemScreen(
     var descricao by remember { mutableStateOf("") }
     var preco by remember { mutableStateOf("0.0") }
     var imagemUri by remember { mutableStateOf<String?>(null) }
-
-    var item: Item? by remember { mutableStateOf(null) }
+    var itemIdState by remember { mutableStateOf(itemId) } // Armazena e preserva o ID do item
 
     val label = if (itemId == null) "Novo Item" else "Editar Item"
 
@@ -61,15 +59,17 @@ fun IncluirEditarItemScreen(
         imagemUri = uri?.toString()
     }
 
+    // Carrega os dados do item se o ID foi passado
     LaunchedEffect(itemId) {
         coroutineScope.launch {
             if (itemId != null) {
-                item = viewModel.buscarPorId(itemId)
+                val item = viewModel.buscarPorId(itemId)
                 item?.let {
                     titulo = it.titulo
                     descricao = it.descricao
                     preco = it.preco.toString()
                     imagemUri = it.imagemUri
+                    itemIdState = it.id // Certifica-se de reutilizar o ID existente
                 }
             }
         }
@@ -153,13 +153,13 @@ fun IncluirEditarItemScreen(
                     onClick = {
                         coroutineScope.launch {
                             val itemSalvar = Item(
-                                id = itemId,
+                                id = itemIdState, // Garante que o ID seja reutilizado
                                 titulo = titulo,
                                 descricao = descricao,
-                                preco = preco.toDouble(),
+                                preco = preco.toDoubleOrNull() ?: 0.0,
                                 imagemUri = imagemUri
                             )
-                            viewModel.gravar(itemSalvar)
+                            viewModel.gravar(itemSalvar) // Salva o item
                             navController.popBackStack()
                         }
                     },
@@ -172,9 +172,3 @@ fun IncluirEditarItemScreen(
         }
     )
 }
-
-
-
-
-
-

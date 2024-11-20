@@ -30,4 +30,8 @@ interface ItemDao {
     @Delete
     suspend fun excluirItem(item: Item)
 
+    @Query("SELECT * FROM item")
+    suspend fun listaritensDiretamente(): List<Item>
+
+
 }

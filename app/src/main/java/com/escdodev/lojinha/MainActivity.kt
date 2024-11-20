@@ -8,37 +8,63 @@ import androidx.activity.enableEdgeToEdge
 import com.escdodev.lojinha.dados.ItemDatabase.Companion.abrirBancoDeDados
 import com.escdodev.lojinha.dados.LocalRepository
 import com.escdodev.lojinha.dados.RemoteRepository
+import com.escdodev.lojinha.dados.SyncRepository
+
 import com.escdodev.lojinha.ui.ItemViewModel
 import com.escdodev.lojinha.ui.ItensNavHost
 
 
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        enableEdgeToEdge()
+//
+//        val isLocal = false
+//
+//        //val context = LocalContext.current
+//        val db = abrirBancoDeDados(this)
+//        //val viewModel = itemViewModel(db.itemDao())
+//        val localRepository = LocalRepository(db.itemDao())
+//        val remoteRepository = RemoteRepository()
+//        //val viewModel = ItemViewModel(localRepository)
+//
+//        val viewModel: ItemViewModel
+//        if (isLocal){
+//            viewModel = ItemViewModel(localRepository)
+//        } else {
+//            viewModel = ItemViewModel(remoteRepository)
+//        }
+//
+//
+//        setContent {
+//            ItensNavHost(viewModel = viewModel)
+//        }
+//    }
+//}
+
+//novo com off
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        val isLocal = false
-
-        //val context = LocalContext.current
-        val db = abrirBancoDeDados(this)
-        //val viewModel = itemViewModel(db.itemDao())
-        val localRepository = LocalRepository(db.itemDao())
+        // Inicializar os repositórios
+        val localRepository = LocalRepository(
+            abrirBancoDeDados(applicationContext).itemDao()
+        )
         val remoteRepository = RemoteRepository()
-        //val viewModel = ItemViewModel(localRepository)
+        val syncRepository = SyncRepository(localRepository, remoteRepository)
 
-        val viewModel: ItemViewModel
-        if (isLocal){
-            viewModel = ItemViewModel(localRepository)
-        } else {
-            viewModel = ItemViewModel(remoteRepository)
-        }
-
+        // Inicializar a ViewModel com o SyncRepository
+        val itemViewModel = ItemViewModel(syncRepository)
 
         setContent {
-            ItensNavHost(viewModel = viewModel)
+            // Passar a ViewModel para o ItensNavHost
+            ItensNavHost(viewModel = itemViewModel)
         }
     }
 }
+
 
 
 

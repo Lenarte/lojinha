@@ -8,15 +8,12 @@ import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun ItensNavHost(
-    //db: ItemDatabase
-    viewModel: ItemViewModel
-) {
+fun ItensNavHost(viewModel: ItemViewModel) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = "cadeiras" // Inicia na tela de login
+        startDestination = "cadeiras"
     ) {
         composable("login") {
             LoginScreen(navController)
@@ -27,12 +24,14 @@ fun ItensNavHost(
         composable("listarItens") {
             ListarItensScreen(viewModel, navController)
         }
+
+        //off
         composable("incluirItens") {
             IncluirEditarItemScreen(viewModel = viewModel, navController = navController)
         }
         composable("editarItem/{itemId}") { navRequest ->
-            val itemId = navRequest.arguments?.getString("itemId")
-            IncluirEditarItemScreen(itemId?.toInt(), viewModel, navController)
+            val itemId = navRequest.arguments?.getString("itemId")?.toInt()
+            IncluirEditarItemScreen(itemId, viewModel, navController)
         }
         composable("cadeiras") {
             CadeirasList(viewModel, navController)
@@ -43,6 +42,6 @@ fun ItensNavHost(
         composable("mesaList") {
             MesaList(viewModel, navController)
         }
-
     }
 }
+
