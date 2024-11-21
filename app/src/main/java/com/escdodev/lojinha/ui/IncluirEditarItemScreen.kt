@@ -3,16 +3,21 @@ package com.escdodev.lojinha.ui
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +54,7 @@ fun IncluirEditarItemScreen(
     var descricao by remember { mutableStateOf("") }
     var preco by remember { mutableStateOf("0.0") }
     var imagemUri by remember { mutableStateOf<String?>(null) }
+    var categoria by remember { mutableStateOf("") } // Adicionada variável para a categoria
     var itemIdState by remember { mutableStateOf(itemId) } // Armazena e preserva o ID do item
 
     val label = if (itemId == null) "Novo Item" else "Editar Item"
@@ -70,6 +77,7 @@ fun IncluirEditarItemScreen(
                     preco = it.preco.toString()
                     imagemUri = it.imagemUri
                     itemIdState = it.id // Certifica-se de reutilizar o ID existente
+
                 }
             }
         }
@@ -148,6 +156,38 @@ fun IncluirEditarItemScreen(
                             .padding(bottom = 16.dp)
                     )
                 }
+                // Botões de seleção de categoria
+                Text("Categoria:", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val opcoes = listOf("sofá", "cadeira", "mesa")
+
+                    opcoes.forEach { opcao ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            RadioButton(
+                                selected = categoria == opcao,
+                                onClick = { categoria = opcao },
+                                colors = RadioButtonDefaults.colors(selectedColor = Color.Gray)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = opcao.replaceFirstChar { it.uppercase() },
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+
+
 
                 Button(
                     onClick = {
@@ -157,7 +197,9 @@ fun IncluirEditarItemScreen(
                                 titulo = titulo,
                                 descricao = descricao,
                                 preco = preco.toDoubleOrNull() ?: 0.0,
-                                imagemUri = imagemUri
+                                imagemUri = imagemUri,
+
+
                             )
                             viewModel.gravar(itemSalvar) // Salva o item
                             navController.popBackStack()
