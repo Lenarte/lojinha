@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -77,7 +81,6 @@ fun IncluirEditarItemScreen(
                     preco = it.preco.toString()
                     imagemUri = it.imagemUri
                     itemIdState = it.id // Certifica-se de reutilizar o ID existente
-
                 }
             }
         }
@@ -93,6 +96,17 @@ fun IncluirEditarItemScreen(
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()  // Volta para a tela anterior
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = Color.White
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Gray
@@ -187,8 +201,6 @@ fun IncluirEditarItemScreen(
                     }
                 }
 
-
-
                 Button(
                     onClick = {
                         coroutineScope.launch {
@@ -197,9 +209,7 @@ fun IncluirEditarItemScreen(
                                 titulo = titulo,
                                 descricao = descricao,
                                 preco = preco.toDoubleOrNull() ?: 0.0,
-                                imagemUri = imagemUri,
-
-
+                                imagemUri = imagemUri
                             )
                             viewModel.gravar(itemSalvar) // Salva o item
                             navController.popBackStack()

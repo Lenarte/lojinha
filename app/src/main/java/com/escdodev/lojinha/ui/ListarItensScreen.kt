@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
@@ -68,6 +69,17 @@ fun ListarItensScreen(
                         color = Color.White
                     )
                 },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()  // Volta para a tela anterior
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Gray
                 )
@@ -89,6 +101,7 @@ fun ListarItensScreen(
                 )
             }
         },
+
         content = { innerPadding ->
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -182,6 +195,7 @@ fun ListarItensScreen(
         }
     )
 }
+
 
 
 
